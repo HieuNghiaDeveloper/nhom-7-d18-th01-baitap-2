@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lấy data</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+
+</head>
+
+<body>
+    <h1>Lấy data và xóa bằng delete</h1>
+    <div id="data">
+
+    </div>
+    <script>
+        $(function () {
+
+            function fetchData() {
+                $.ajax({
+                    url: "https://6228b3e79fd6174ca82cae6e.mockapi.io/product",
+                    method: "GET",
+                    dataType: "JSON",
+                    async: false,
+                    success: function (response) {
+                        var html = "";
+                        $.each(response, function (key, value) {
+                            var index = key + 1;
+                            var id = value.id;
+                            var name = value.name;
+                            var price = value.price;
+                            html += '<tr data-id=' + id + '>'
+                                + '    <td>' + name + '</td>'
+                                + '    <td>' + price + '</td>'
+                                + '    <td><button data-id="' + id + '" class="delete-product">Dẻlẻtẻ</button></td>'
+                                + ' <tr>';
+                        })
+                        $("#data").html(html)
+                    },
+                    error: function (error) {
+                        console.error();
+                    }
+                })
+            }
+            fetchData();
+
+
+
+
+            $(".delete-product").on("click", function () {
+                var id = $(this).attr("data-id");
+                if ($(this).parent().parent().attr('data-id') == id) {
+                    $(this).parent().parent().hide(1000)
+                }
+                $.ajax({
+                    url: "https://6228b3e79fd6174ca82cae6e.mockapi.io/product/" + id,
+                    method: "DELETE",
+                    dataType: "JSON",
+                    async: false,
+                    success: function (response) {
+                        alert("Delete successfully");
+                        // fetchData();
+
+
+
+                    },
+                    error: function (error) {
+                        console.error();
+                    }
+                })
+            })
+
+
+
+        })
+    </script>
+</body>
+
+</html>
